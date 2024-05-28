@@ -1,4 +1,4 @@
-// Generated from d:/Desktop/informatica 5 año/Tecnicas de compilación/Parcial TC/parcial/src/main/antlr4/C.g4 by ANTLR 4.13.1
+// Generated from d:/Desktop/informatica 5 año/Tecnicas de compilación/Parcial TC/parcial/src/main/resources/C.g4 by ANTLR 4.13.1
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
