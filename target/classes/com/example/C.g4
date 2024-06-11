@@ -1,36 +1,68 @@
 grammar C;
 
-prog:   stat+ ;
+// Regla de inicio
+prog: (statement | functionDecl)* EOF;
 
-stat:   block
-      | declaration
-      | assignment
-      | ifStat
-      | forStat
-      | whileStat
-      | functionCall
-      ;
+// Bloques de código
+block: '{' statement* '}';
 
-block:  '{' stat* '}' ;
+// Declaraciones y asignaciones
+statement: 
+      varDecl
+    | assignment
+    | ifStatement
+    | forStatement
+    | whileStatement
+    | functionCall
+    | block
+    | ';'  // statement vacío
+    ;
 
-declaration: 'int' ID ';' ;
+varDecl: type ID ('=' expr)? ';';
+assignment: ID '=' expr ';';
 
-assignment: ID '=' expr ';' ;
+// Expresiones
+expr: logicalExpr;
 
-expr:   expr ('+'|'-') expr
-      | expr ('*'|'/') expr
-      | INT
-      | ID
-      ;
+logicalExpr: equalityExpr ('&&' equalityExpr | '||' equalityExpr)*;
+equalityExpr: relationalExpr ('==' relationalExpr | '!=' relationalExpr)*;
+relationalExpr: additiveExpr ('<' additiveExpr | '>' additiveExpr | '<=' additiveExpr | '>=' additiveExpr)*;
+additiveExpr: multiplicativeExpr ('+' multiplicativeExpr | '-' multiplicativeExpr)*;
+multiplicativeExpr: unaryExpr ('*' unaryExpr | '/' unaryExpr | '%' unaryExpr)*;
+unaryExpr: primaryExpr;
+primaryExpr: 
+      '(' expr ')'
+    | ID
+    | INT
+    | FLOAT
+    ;
 
-ifStat: 'if' '(' expr ')' stat ('else' stat)? ;
+// Declaración y llamada a función
+functionDecl: type ID '(' params? ')' block;
+functionCall: ID '(' args? ')' ';';
 
-forStat: 'for' '(' assignment expr ';' assignment ')' stat ;
+params: param (',' param)*;
+param: type ID;
 
-whileStat: 'while' '(' expr ')' stat ;
+args: expr (',' expr)*;
 
-functionCall: ID '(' (expr (',' expr)*)? ')' ';' ;
+// Estructuras de control
+ifStatement: 'if' '(' expr ')' statement ('else' statement)?;
+forStatement: 'for' '(' forControl ')' statement;
+forControl: forInit ';'? expr? ';' forUpdate?;
+forInit: varDecl ';'? | ';';
+forUpdate: assignment ';'? | ';';
 
-ID  :   [a-zA-Z_][a-zA-Z_0-9]* ;
-INT :   [0-9]+ ;
-WS  :   [ \t\r\n]+ -> skip ;
+
+
+whileStatement: 'while' '(' expr ')' statement;
+
+// Tipos de datos
+type: 'int' | 'float' | 'void' | 'char';
+
+// Tokens
+ID: [a-zA-Z_][a-zA-Z_0-9]*;
+INT: [0-9]+;
+FLOAT: [0-9]+ '.' [0-9]* | '.' [0-9]+;  // Reconocer números de punto flotante
+WS: [ \t\r\n]+ -> skip;
+COMMENT: '//' ~[\r\n]* -> skip;

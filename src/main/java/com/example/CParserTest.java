@@ -1,44 +1,39 @@
 package com.example;
 
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.tree.*;
 
-// Las diferentes entradas se explicaran oportunamente
+import java.io.IOException;
+
 public class CParserTest {
-    public static void main(String[] args) throws Exception {
-        System.out.println("Hello, Compilador!!!");
-        // create a CharStream that reads from file
-        CharStream input = CharStreams.fromFileName("input/codigo.txt");
+    public static void main(String[] args) {
+        if (args.length == 0) {
+            System.out.println("Por favor, proporciona el nombre del archivo de entrada.");
+            return;
+        }
 
-        // create a lexer that feeds off of input CharStream
-        compiladoresLexer lexer = new compiladoresLexer(input);
+        String inputFile = args[0];
 
-        // create a buffer of tokens pulled from the lexer
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        try {
+            // Crear un CharStream que lee de un archivo
+            CharStream input = CharStreams.fromFileName(inputFile);
 
-        // create a parser that feeds off the tokens buffer
-        compiladoresParser parser = new compiladoresParser(tokens);
+            // Crear un lexer que consume el CharStream
+            CLexer lexer = new CLexer(input);
 
-        // create Listener
-        // ExpRegBaseListener escucha = new Escucha();
+            // Crear un buffer de tokens a partir del lexer
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-        // Conecto el objeto con Listeners al parser
-        // parser.addParseListener(escucha);
+            // Crear un parser que consume los tokens
+            CParser parser = new CParser(tokens);
 
-        // Solicito al parser que comience indicando una regla gramatical
-        // En este caso la regla es el simbolo inicial
-        parser.programa();
-        // ParseTree tree =  parser.s();
-        // Conectamos el visitor
-        // Caminante visitor = new Caminante();
-        // visitor.visit(tree);
-        // System.out.println(visitor);
-        // System.out.println(visitor.getErrorNodes());
-        // Imprime el arbol obtenido
-        // System.out.println(tree.toStringTree(parser));
-        // System.out.println(escucha);
+            // Iniciar el parsing a partir de la regla de inicio 'prog'
+            ParseTree tree = parser.prog();
 
+            // Imprimir el árbol de parsing
+            System.out.println(tree.toStringTree(parser));
+        } catch (IOException e) {
+            System.err.println("Error al leer el archivo de entrada: " + e.getMessage());
+        }
     }
 }
