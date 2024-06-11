@@ -49,12 +49,7 @@ args: expr (',' expr)*;
 // Estructuras de control
 ifStatement: 'if' '(' expr ')' statement ('else' statement)?;
 forStatement: 'for' '(' forControl ')' statement;
-forControl: forInit ';'? expr? ';' forUpdate?;
-forInit: varDecl ';'? | ';';
-forUpdate: assignment ';'? | ';';
-
-
-
+forControl: (varDecl | assignment | ';')? expr? ';'? assignment?;  // Corrección aquí
 whileStatement: 'while' '(' expr ')' statement;
 
 // Tipos de datos
