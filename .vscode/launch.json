@@ -11,7 +11,7 @@
             // Archivo con la gramatica
             "grammar": "src/main/java/com/example/C.g4",
             // Archivo a parsear
-            "input": "input/example.txt",
+            "input": "input/example1.txt",
             // Simbolo inicial
             "startRule": "prog",
             // Muestra Arbol Sintactico
